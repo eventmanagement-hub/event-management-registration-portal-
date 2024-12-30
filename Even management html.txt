@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #0077b6;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #023e8a;
+            padding: 0.5em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1em;
+        }
+        section {
+            padding: 2em;
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 0.8em;
+            text-align: center;
+        }
+        table th {
+            background-color: #0077b6;
+            color: white;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+        form {
+            max-width: 500px;
+            margin: 2em auto;
+            background: white;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        form div {
+            margin-bottom: 1em;
+        }
+        form label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 0.7em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        form button {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 0.7em 1.5em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #023e8a;
+        }
+        footer {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #023e8a;
+            color: white;
+        }
+        #submitted-data, #all-registrations {
+            margin-top: 2em;
+        }
+        #all-registrations {
+            padding: 1em;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 90%;
+            margin: 1em auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Event Management System</h1>
+        <p>Check upcoming events and register to participate!</p>
+    </header>
+    <nav>
+        <a href="#about">About Us</a>
+        <a href="#events">Upcoming Events</a>
+        <a href="#register">Register</a>
+    </nav>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We organize exciting events to bring people together. Explore our upcoming events and join us to create unforgettable memories!</p>
+    </section>
+
+    <section id="events">
+        <h2>Upcoming Events</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Annual Tech Conference</td>
+                    <td>20th Dec 2024</td>
+                    <td>Coimbatore Convention Center</td>
+                </tr>
+                <tr>
+                    <td>Music Fest</td>
+                    <td>25th Dec 2024</td>
+                    <td>City Open Grounds</td>
+                </tr>
+                <tr>
+                    <td>Startup Meet</td>
+                    <td>5th Jan 2025</td>
+                    <td>Innovation Hub</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="register">
+        <h2>Register for an Event</h2>
+        <form id="eventForm">
+            <div>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div>
+                <label for="event">Event Name:</label>
+                <input type="text" id="event" name="event" required>
+            </div>
+            <button type="button" onclick="submitForm()">Register</button>
+        </form>
+    </section>
+
+    <section id="submitted-data">
+        <h2>Submitted Data</h2>
+        <p id="display-data">No data submitted yet.</p>
+    </section>
+
+    <section id="all-registrations">
+        <h2>All Registrations</h2>
+        <div id="registration-list">No registrations yet.</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Event Management. All rights reserved.</p>
+        <button onclick="viewAllRegistrations()">View All Registrations</button>
+    </footer>
+
+    <script>
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const event = document.getElementById('event').value;
+
+            const registration = { name, email, phone, event };
+
+            // Save registration to localStorage
+            let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+            registrations.push(registration);
+            localStorage.setItem('registrations', JSON.stringify(registrations));
+
+            // Display the last submitted data
+            const displayData = `
+                <strong>Name:</strong> ${name}<br>
+                <strong>Email:</strong> ${email}<br>
+                <strong>Phone:</strong> ${phone}<br>
+                <strong>Event:</strong> ${event}<br>
+            `;
+            document.getElementById('display-data').innerHTML = displayData;
+
+            // Reset the form
+            document.getElementById('eventForm').reset();
+        }
+
+        function viewAllRegistrations() {
+            const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+            const listElement = document.getElementById('registration-list');
+
+            if (registrations.length === 0) {
+                listElement.innerHTML = 'No registrations yet.';
+            } else {
+                listElement.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Event</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${registrations.map(r => `
+                                <tr>
+                                    <td>${r.name}</td>
+                                    <td>${r.email}</td>
+                                    <td>${r.phone}</td>
+                                    <td>${r.event}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            document.getElementById('all-registrations').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
